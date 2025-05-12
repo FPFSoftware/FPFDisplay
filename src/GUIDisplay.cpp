@@ -73,7 +73,8 @@ void GUIDisplay::Initialize(const std::string& title) {
   UpdateSummary();*/
 }
 
-void GUIDisplay::LoadGeometry(const std::string& gdmlFile) {
+void GUIDisplay::LoadGeometry(const std::string& gdmlFile, const bool useDefault) {
+  geomMgr_.UseDefault(useDefault);
   geomMgr_.LoadGDML(gdmlFile);
 }
 

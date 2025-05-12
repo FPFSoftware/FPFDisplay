@@ -20,6 +20,9 @@ public:
     /// Load geometry from GDML
     void LoadGDML(const std::string &gdmlFile);
 
+    /// Use default colors/transparencies 
+    void UseDefault(const bool value) { leaveDefault_ = value; }
+
     /// Get the top “hall” node
     TEveGeoTopNode *GetTopNode() const;
 
@@ -34,6 +37,7 @@ private:
     TGeoNode *hallNode_;
     std::vector<TGeoNode *> detectorNodes_;
     std::string gentleGeoFile_;
+    bool leaveDefault_ = false;
 
     void PrintHierarchyTree(TGeoNode *node, int maxDepth, int level, bool skipAssemblies);
 

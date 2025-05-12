@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 
     GUIDisplay gui;
     try {
-        gui.LoadGeometry(gdmlFile);
+        gui.LoadGeometry(gdmlFile, false);
         gui.Initialize("FPF Event Display");
         if (!rootFile.empty()) {
             gui.LoadData(rootFile);

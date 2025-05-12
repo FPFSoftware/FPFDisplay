@@ -23,7 +23,7 @@ public:
     void Initialize(const std::string& title);
 
     /// Load only geometry (GDML)
-    void LoadGeometry(const std::string& gdmlFile);
+    void LoadGeometry(const std::string& gdmlFile, const bool useDefault = false);
 
     /// Load event data (ROOT)
     void LoadData(const std::string& rootFile);
