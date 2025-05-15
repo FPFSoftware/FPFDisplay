@@ -85,7 +85,7 @@ void GeometryManager::ExtractGentleGeometry() {
     // make each detector node into its top node?
     // see https://root-forum.cern.ch/t/axes-dont-show-up-in-the-projection-of-a-imported-gdml-geometry-in-eve/40484/3
     TEveGeoTopNode* eveTopNode = new TEveGeoTopNode(gGeoManager, hallNode_);
-    eveTopNode->SetVisLevel(5);
+    eveTopNode->SetVisLevel(4);
     eveTopNode->GetNode()->GetVolume()->SetTransparency(100); // hall 100% transparent 
     for (int i = 0; i < eveTopNode->GetNode()->GetNdaughters(); ++i) {
 
@@ -112,21 +112,21 @@ void GeometryManager::ExtractGentleGeometry() {
 
                 if(flarePV == "LArPhysical"){
                     auto tpc = current_node->GetDaughter(j);
-                    tpc->GetVolume()->SetTransparency(80); //make it transparent
+                    tpc->GetVolume()->SetTransparency(90); //make it transparent
                     // go down further and make lar modules light blue
                     for(int k = 0; k < tpc->GetNdaughters(); ++k){
                         tpc->GetDaughter(k)->GetVolume()->SetLineColor(kCyan-10);
-                        tpc->GetDaughter(k)->GetVolume()->SetTransparency(80);
+                        tpc->GetDaughter(k)->GetVolume()->SetTransparency(90);
 
                         for(int kk=0; kk<tpc->GetDaughter(k)->GetNdaughters(); ++kk){
                             tpc->GetDaughter(k)->GetDaughter(kk)->GetVolume()->SetLineColor(kCyan-10);
-                            tpc->GetDaughter(k)->GetDaughter(kk)->GetVolume()->SetTransparency(80);
+                            tpc->GetDaughter(k)->GetDaughter(kk)->GetVolume()->SetTransparency(90);
 
                         }   
                     }    
                 }
                 else if( flarePV == "CryostatPhysical") {
-                    current_node->GetDaughter(j)->GetVolume()->SetTransparency(60); //make it transparent
+                    current_node->GetDaughter(j)->GetVolume()->SetTransparency(70); //make it transparent
                 }                
             }
         }
