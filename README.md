@@ -25,18 +25,17 @@ You can run the event display with the following command:
 - `<geometry.gdml>`  
   GDML file exported from FPFSim using the `/det/saveGdml` macro command.
 
-- `[trajectory.root]` (optional)  
+- `[datafile.root]` (optional)  
   FPFSim output ROOT file containing saved trajectory information.
   ```
   /tracking/storeTrajectory 1
   /histo/saveTrack true
   ```
-  IF provided, FPFDisplay will overlay tracks from this file on the geometry.
+  If provided, FPFDisplay will overlay tracks from this file on the geometry.
 
 ### Navigation
 
 You can navigate the display in the following ways:
-
 - You can use the mouse to rotate or zoom the geometry. 
 - You can use the arrow keys to pan the geometry, recentering the camera.
 - If you click on a track, it will get highligthed across the views.
