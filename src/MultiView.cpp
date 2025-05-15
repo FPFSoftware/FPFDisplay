@@ -110,3 +110,15 @@ void MultiView::ImportEventZY(TEveElement* el)
 {
    fZYMgr->ImportElements(el, fZYEventScene);
 }
+
+// ____________________________________________________________________________
+void MultiView::DestroyEventZX()
+{
+   fZXEventScene->DestroyElements();
+}
+
+// ____________________________________________________________________________
+void MultiView::DestroyEventZY()
+{
+   fZYEventScene->DestroyElements();
+}

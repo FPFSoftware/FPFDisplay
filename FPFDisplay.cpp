@@ -14,11 +14,14 @@ int main(int argc, char** argv) {
 
     GUIDisplay gui;
     try {
+        
         gui.LoadGeometry(gdmlFile, false);
-        gui.Initialize("FPF Event Display");
+        
         if (!rootFile.empty()) {
-            gui.LoadData(rootFile);
+            gui.LoadFile(rootFile);
         }
+
+        gui.Initialize("FPF Event Display");
         app.Run();
     }
     catch (const std::exception& e) {

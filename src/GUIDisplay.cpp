@@ -7,6 +7,10 @@
 #include "TEveManager.h"
 #include "TEveBrowser.h"
 #include "TEveGeoNode.h"
+#include "TEveTrack.h"
+#include "TEveEventManager.h"
+
+#include "TSystem.h"
 #include "TGTab.h"
 #include "TGFrame.h"
 #include "TGButton.h"
@@ -38,39 +42,15 @@ void GUIDisplay::Initialize(const std::string& title) {
   mv_->ImportGeomZX(geo);
   mv_->ImportGeomZY(geo);
   
-  gEve->Redraw3D(kTRUE, kTRUE);
+  MakeControlTab();
 
-  /*
-
-  // 3) Build a separate “Controls” tab for Prev/Next + summary
-  std::cout << "[GUIDisplay] Building control tab..." << std::endl;
-  TEveWindowSlot* slotCtrl =
-    TEveWindow::CreateWindowInTab(browser->GetTabRight());  
-  slotCtrl->SetElementName("Controls");
-
-  // Native TG frame
-  TGHorizontalFrame* cf =
-    new TGHorizontalFrame(gClient->GetRoot(), 400, 200);
-  auto btnPrev = new TGTextButton(cf, "Prev Event");
-  auto btnNext = new TGTextButton(cf, "Next Event");
-  summaryView_ = new TGTextView(cf);
-
-  cf->AddFrame(btnPrev,  new TGLayoutHints(kLHintsCenterY|kLHintsLeft));
-  cf->AddFrame(btnNext,  new TGLayoutHints(kLHintsCenterY|kLHintsLeft));
-  cf->AddFrame(summaryView_, new TGLayoutHints(kLHintsExpandX|kLHintsExpandY));
-
-  // Embed it
-  //slotCtrl->StartEmbedding();                          
-  //cf->MapSubwindows(); cf->Resize(); cf->MapWindow();
-  //slotCtrl->StopEmbedding();                           
-  slotCtrl->MakeFrame(cf);
-
-  // Hook up events
-  btnNext->Connect("Clicked()", "GUIDisplay", this, "OnNextEvent()");
-  btnPrev->Connect("Clicked()", "GUIDisplay", this, "OnPrevEvent()");
+  LoadEvent();
 
   // Show initial summary
-  UpdateSummary();*/
+  //UpdateSummary();
+
+  gEve->Redraw3D(kTRUE);
+
 }
 
 void GUIDisplay::LoadGeometry(const std::string& gdmlFile, const bool useDefault) {
@@ -78,24 +58,80 @@ void GUIDisplay::LoadGeometry(const std::string& gdmlFile, const bool useDefault
   geomMgr_.LoadGDML(gdmlFile);
 }
 
-void GUIDisplay::LoadData(const std::string& rootFile) {
-  if (dataMgr_.LoadFile(rootFile)) {
+void GUIDisplay::LoadFile(const std::string& rootFile) {
+  dataMgr_.LoadFile(rootFile);
+}
+
+void GUIDisplay::LoadEvent(){
+
+  gEve->GetViewers()->DeleteAnnotations();
+
+  // load current selected event 
+  // if no file open, skip
+  if(dataMgr_.LoadEvent()){
+    TEveElement* top = gEve->GetCurrentEvent();
+
+    mv_->DestroyEventZX();
+    mv_->ImportEventZX(top);
+
+    mv_->DestroyEventZY();
+    mv_->ImportEventZY(top);
+
+    gEve->Redraw3D(kFALSE, kTRUE);
+  }
+
+}
+
+void GUIDisplay::OnNextEvent() {
+  if (dataMgr_.NextEvent()){
+    LoadEvent();
+    UpdateSummary();
+  } 
+}
+
+void GUIDisplay::OnPrevEvent() {
+  if (dataMgr_.PrevEvent()){
+    LoadEvent();
     UpdateSummary();
   }
 }
 
-void GUIDisplay::OnNextEvent() {
-  if (dataMgr_.NextEvent()) UpdateSummary();
-}
+void GUIDisplay::MakeControlTab(){
 
-void GUIDisplay::OnPrevEvent() {
-  if (dataMgr_.PrevEvent()) UpdateSummary();
+  std::cout << "[GUIDisplay] Building 'Event Control' tab..." << std::endl;
+
+  TEveBrowser* browser = gEve->GetBrowser();
+  browser->StartEmbedding(TRootBrowser::kLeft);
+
+  TGMainFrame* frm = new TGMainFrame(gClient->GetRoot(), 800, 100);
+  frm->SetWindowName("Event Control");
+  frm->SetCleanup(kDeepCleanup);
+
+  TGHorizontalFrame* hf = new TGHorizontalFrame(frm);
+  TString icondir(Form("%s/icons/", gSystem->Getenv("ROOTSYS")));
+  TGPictureButton* btn;
+
+  btn = new TGPictureButton(hf, gClient->GetPicture(icondir + "GoBack.gif"));
+  hf->AddFrame(btn);
+  btn->Connect("Clicked()", "GUIDisplay", this, "OnPrevEvent()");
+
+  btn = new TGPictureButton(hf, gClient->GetPicture(icondir + "GoForward.gif"));
+  hf->AddFrame(btn);
+  btn->Connect("Clicked()", "GUIDisplay", this, "OnNextEvent()");
+
+  frm->AddFrame(hf);
+  frm->MapSubwindows();
+  frm->Resize();
+  frm->MapWindow();
+
+  browser->StopEmbedding();
+  browser->SetTabTitle("Event Control", 0);
 }
 
 void GUIDisplay::UpdateSummary() {
     // wipe old lines
-    summaryView_->Clear(); 
+    //summaryView_->Clear(); 
     // append the new text                                           
-    summaryView_->AddLine(dataMgr_.GetSummary().c_str());            
+    //summaryView_->AddLine(dataMgr_.GetSummary().c_str());            
   }
   

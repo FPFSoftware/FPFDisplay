@@ -38,6 +38,9 @@ struct MultiView {
    void ImportGeomZY(TEveElement* el);
    void ImportEventZX(TEveElement* el);
    void ImportEventZY(TEveElement* el);
+   void DestroyEventZX();
+   void DestroyEventZY();
+
 };
 
 #endif // MULTIVIEW_HH

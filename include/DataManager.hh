@@ -2,11 +2,12 @@
 #define DATAMANAGER_H
 
 #include <string>
+#include <vector>
+#include "TFile.h"
+#include "TTreeReader.h"
+#include "TEveElement.h"
+#include "TEveLine.h"
 
-/**
- * Stub for an eventual ROOT‐based event reader.
- * Right now just maintains a current‐event index and summary.
- */
 class DataManager {
 public:
     DataManager();
@@ -15,15 +16,26 @@ public:
     /// Load a ROOT file.
     bool LoadFile(const std::string& filename);
 
-    /// Move to next/previous event.
+    /// Move to next event.
     bool NextEvent();
+    /// Move to the previous event.
     bool PrevEvent();
+
+    /// Load selected event
+    bool LoadEvent();
 
     /// Text summary of the current event.
     std::string GetSummary() const;
 
 private:
     int currentEvent_;
+    TFile* rootFile_;
+
+    std::vector<int> eventList_;
+    TEveElementList* trackList_;
+    TTreeReader trajReader_;
+
+    void SetTrackStylebyPDG(TEveLine *track, int pdg);
 };
 
 #endif // DATAMANAGER_H

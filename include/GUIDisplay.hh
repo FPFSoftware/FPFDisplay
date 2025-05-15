@@ -25,24 +25,30 @@ public:
     /// Load only geometry (GDML)
     void LoadGeometry(const std::string& gdmlFile, const bool useDefault = false);
 
-    /// Load event data (ROOT)
-    void LoadData(const std::string& rootFile);
+    /// Load data (ROOT) file
+    void LoadFile(const std::string& rootFile);
+
+    /// Called when Next/Prev buttons fire
+    void OnNextEvent();
+    void OnPrevEvent();
+
+    ClassDef(GUIDisplay, 0)  // ROOT dictionary for signal/slot
 
 private:
     GeometryManager geomMgr_;
     DataManager dataMgr_;
     MultiView *mv_;
     TGTextView* summaryView_;
-    
 
-    /// Called when Next/Prev buttons fire
-    void OnNextEvent();
-    void OnPrevEvent();
+    /// Build control tab
+    void MakeControlTab();
+
+    /// Load a new data event
+    void LoadEvent();
 
     /// Update summary text
     void UpdateSummary();
 
-    ClassDef(GUIDisplay, 0)  // ROOT dictionary for signal/slot
 };
 
 #endif // GUIDISPLAY_H

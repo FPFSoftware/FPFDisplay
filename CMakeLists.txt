@@ -27,6 +27,9 @@ file(GLOB_RECURSE sources
 include(${ROOT_USE_FILE})
 ROOT_GENERATE_DICTIONARY(GUIDisplayDict
     ${CMAKE_CURRENT_SOURCE_DIR}/include/GUIDisplay.hh
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/GeometryManager.hh
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/DataManager.hh
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/MultiView.hh
     LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/include/LinkDef.h
 )
 
