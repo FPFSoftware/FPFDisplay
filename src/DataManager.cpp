@@ -116,19 +116,39 @@ bool DataManager::LoadEvent() {
     TTreeReaderArray<double> trackPointY_(trajReader_,"trackPointY");
     TTreeReaderArray<double> trackPointZ_(trajReader_,"trackPointZ");
 
+    std::cout << "[DataManager] Selecting tracks longer than " << lengthCut_ << " cm and above " << kinECut_ << " initial kinetic energy" << std::endl;
+
     while( trajReader_.Next()){
 
         //select event
         if( *evtID_ != currentEvent_ ) continue; 
-    
-        // Create the track and add it to the list
+
         const int npts = *trackNPoints_;
+        const double mm_to_cm = 1e-1;
+
+        // to avoid rendering too many segments, skip track if
+        // - it's not a primary track AND
+        // - it's below min kinE threshold OR
+        // - it's below min length threshold
+        if( *trackPID_ != 0 ){ //primary tracks have no parents :(
+
+            double dx = trackPointX_[npts-1] - trackPointX_[0];
+	        double dy = trackPointY_[npts-1] - trackPointY_[0];
+	        double dz = trackPointZ_[npts-1] - trackPointZ_[0];
+	        double len = TMath::Sqrt(dx*dx + dy*dy + dz*dz)*mm_to_cm;
+
+            // if you are not a primary, apply kinetic energy cut
+            // this helps to avoid rendering too many segments
+            if ( *trackKinE_ < kinECut_ || len < lengthCut_ )
+                continue; 
+        }
+    
+        // Create the track and add it to the list   
         TEveLine* track = new TEveLine(Form("Track %d", *trackTID_), npts);
         track->SetSmooth(kTRUE);
 
         SetTrackStylebyPDG(track, *trackPDG_);
 
-        double mm_to_cm = 1e-1;
         for (int k = 0; k < npts; ++k) {
             track->SetNextPoint(trackPointX_[k]*mm_to_cm,trackPointY_[k]*mm_to_cm,trackPointZ_[k]*mm_to_cm);
         }
@@ -138,7 +158,7 @@ bool DataManager::LoadEvent() {
 
     trajReader_.Restart();
     
-    std::cout << "[DataManager] Switched to event " << currentEvent_ << std::endl;
+    std::cout << "[DataManager] Switched to event " << currentEvent_ << " (" << trackList_->NumChildren() << " tracks)" << std::endl;
     return true;
 }
 

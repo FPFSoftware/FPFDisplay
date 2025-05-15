@@ -29,6 +29,8 @@ public:
 
 private:
     int currentEvent_;
+    double kinECut_ = 60; //MeV
+    double lengthCut_ = 15; //cm
     TFile* rootFile_;
 
     std::vector<int> eventList_;
