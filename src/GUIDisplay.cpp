@@ -41,6 +41,8 @@ void GUIDisplay::Initialize(const std::string& title) {
   mv_ = new MultiView();
   mv_->ImportGeomZX(geo);
   mv_->ImportGeomZY(geo);
+
+  gEve->GetBrowser()->GetTabRight()->SetTab(1);
   
   MakeControlTab();
 

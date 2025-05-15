@@ -89,7 +89,7 @@ void GeometryManager::ExtractGentleGeometry() {
     eveTopNode->GetNode()->GetVolume()->SetTransparency(100); // hall 100% transparent 
     for (int i = 0; i < eveTopNode->GetNode()->GetNdaughters(); ++i) {
 
-        eveTopNode->GetNode()->GetDaughter(i)->GetVolume()->SetTransparency(100);  // detector envelopes 100% transparent
+        eveTopNode->GetNode()->GetDaughter(i)->GetVolume()->SetTransparency(90);  // detector envelopes 100% transparent
 
         // skip further color/transparency changes
         if( leaveDefault_ ) continue;

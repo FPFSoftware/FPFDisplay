@@ -23,18 +23,15 @@ file(GLOB_RECURSE sources
   ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
-# Build GUIDisplay dictiornary
-include(${ROOT_USE_FILE})
+# Build GUIDisplay dictionary
 ROOT_GENERATE_DICTIONARY(GUIDisplayDict
     ${CMAKE_CURRENT_SOURCE_DIR}/include/GUIDisplay.hh
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/GeometryManager.hh
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/DataManager.hh
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/MultiView.hh
     LINKDEF ${CMAKE_CURRENT_SOURCE_DIR}/include/LinkDef.h
 )
 
 # Add the executable
 add_executable(FPFDisplay ${CMAKE_CURRENT_SOURCE_DIR}/FPFDisplay.cpp ${sources} ${CMAKE_CURRENT_BINARY_DIR}/GUIDisplayDict.cxx)
+target_link_options(FPFDisplay PRIVATE -rdynamic)
 
 # Include ROOT + local headers
 target_include_directories(FPFDisplay PRIVATE ${ROOT_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/include)
