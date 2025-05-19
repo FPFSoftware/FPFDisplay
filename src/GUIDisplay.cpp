@@ -14,6 +14,7 @@
 #include "TGTab.h"
 #include "TGFrame.h"
 #include "TGButton.h"
+#include "TGLabel.h"
 #include "TGTextView.h"
 
 ClassImp(GUIDisplay)
@@ -48,8 +49,7 @@ void GUIDisplay::Initialize(const std::string& title) {
 
   LoadEvent();
 
-  // Show initial summary
-  //UpdateSummary();
+  UpdateSummary();
 
   gEve->Redraw3D(kTRUE);
 
@@ -113,15 +113,27 @@ void GUIDisplay::MakeControlTab(){
   TString icondir(Form("%s/icons/", gSystem->Getenv("ROOTSYS")));
   TGPictureButton* btn;
 
+  // go back button
+  TGLabel *lblBack = new TGLabel(hf, "Prev.");
+  hf->AddFrame(lblBack, new TGLayoutHints(kLHintsCenterY, 5, 0, 2, 2));
   btn = new TGPictureButton(hf, gClient->GetPicture(icondir + "GoBack.gif"));
-  hf->AddFrame(btn);
+  hf->AddFrame(btn, new TGLayoutHints(kLHintsCenterY, 5, 10, 2, 2));
   btn->Connect("Clicked()", "GUIDisplay", this, "OnPrevEvent()");
-
+  
+  
+  // go forward button
   btn = new TGPictureButton(hf, gClient->GetPicture(icondir + "GoForward.gif"));
-  hf->AddFrame(btn);
+  hf->AddFrame(btn, new TGLayoutHints(kLHintsCenterY, 10, 5, 2, 2));
   btn->Connect("Clicked()", "GUIDisplay", this, "OnNextEvent()");
+  TGLabel *lblNext = new TGLabel(hf, "Next");
+  hf->AddFrame(lblNext, new TGLayoutHints(kLHintsCenterY, 0,5,2,2));
 
-  frm->AddFrame(hf);
+  frm->AddFrame(hf, new TGLayoutHints(kLHintsTop | kLHintsCenterX));
+
+  // event summary
+  summaryView_ = new TGLabel(frm, "");
+  frm->AddFrame(summaryView_, new TGLayoutHints(kLHintsExpandX | kLHintsTop, 5, 5, 10, 5));
+
   frm->MapSubwindows();
   frm->Resize();
   frm->MapWindow();
@@ -131,9 +143,8 @@ void GUIDisplay::MakeControlTab(){
 }
 
 void GUIDisplay::UpdateSummary() {
-    // wipe old lines
-    //summaryView_->Clear(); 
-    // append the new text                                           
-    //summaryView_->AddLine(dataMgr_.GetSummary().c_str());            
-  }
+  summaryView_->SetText(dataMgr_.GetSummary().c_str());
+  // resize to fit new text
+  summaryView_->Resize(summaryView_->GetDefaultWidth(),summaryView_->GetDefaultHeight());
+}
   

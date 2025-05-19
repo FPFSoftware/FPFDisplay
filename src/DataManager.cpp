@@ -116,7 +116,7 @@ bool DataManager::LoadEvent() {
     TTreeReaderArray<double> trackPointY_(trajReader_,"trackPointY");
     TTreeReaderArray<double> trackPointZ_(trajReader_,"trackPointZ");
 
-    std::cout << "[DataManager] Selecting tracks longer than " << lengthCut_ << " cm and above " << kinECut_ << " initial kinetic energy" << std::endl;
+    std::cout << "[DataManager] Selecting tracks longer than " << lengthCut_ << " cm and above " << kinECut_ << " MeV initial kinetic energy" << std::endl;
 
     while( trajReader_.Next()){
 
@@ -220,7 +220,9 @@ void DataManager::SetTrackStylebyPDG(TEveLine* track, int pdg){
 std::string DataManager::GetSummary() const {
     std::stringstream ss;
     ss << "Event #" << currentEvent_;
-    ss << " of " << eventList_.size() << " loaded";
+    ss << " of " << eventList_.size()-1 << " loaded";
     ss << "\n\nTrack count: " << (trackList_ ? trackList_->NumChildren() : 0);
+    ss << "\nKinetic energy threshold: " << kinECut_ << " MeV";
+    ss << "\nLength threshold: " << lengthCut_ << " cm";
     return ss.str();
 }

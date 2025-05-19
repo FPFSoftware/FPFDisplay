@@ -8,7 +8,7 @@
 #include "DataManager.hh"
 #include "MultiView.hh"
 
-#include "TGTextView.h"
+#include "TGLabel.h"
 
 /**
  * Sets up the TEve GUI: multi‐view (3D, ZX, ZY) + a Controls tab
@@ -38,7 +38,7 @@ private:
     GeometryManager geomMgr_;
     DataManager dataMgr_;
     MultiView *mv_;
-    TGTextView* summaryView_;
+    TGLabel* summaryView_;
 
     /// Build control tab
     void MakeControlTab();
