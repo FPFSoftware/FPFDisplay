@@ -29,6 +29,7 @@ public:
 
 private:
     int currentEvent_;
+    int currentIndex_;
     double kinECut_ = 60; //MeV
     double lengthCut_ = 15; //cm
     TFile* rootFile_;
