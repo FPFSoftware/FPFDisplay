@@ -56,30 +56,33 @@ bool DataManager::LoadFile(const std::string& filename) {
     trajReader_.Restart();
 
     std::cout << "[DataManager] There are " << eventList_.size() << " events in the tree" << std::endl;
-    currentEvent_ = eventList_.at(0);
+    currentIndex_ = 0;
+    currentEvent_ = eventList_.at(currentIndex_);
 
     return true;
 }
 
 bool DataManager::NextEvent() {
     if(!rootFile_) return false;
-    if (std::find(eventList_.begin(),eventList_.end(), currentEvent_+1) == eventList_.end()) {
+    if (currentIndex_+1 >= eventList_.size()) {
         std::cout << "[DataManager] Already at last event." << std::endl;
         return false;
     }
 
-    ++currentEvent_;
+    ++currentIndex_;
+    currentEvent_ = eventList_.at(currentIndex_);
     return true;
 }
 
 bool DataManager::PrevEvent() {
     if(!rootFile_) return false;
-    if (std::find(eventList_.begin(),eventList_.end(), currentEvent_-1) == eventList_.end()) {
+    if (currentIndex_-1 < 0) {
         std::cout << "[DataManager] Already at first event." << std::endl;
         return false;
     }
     
-    --currentEvent_;
+    --currentIndex_;
+    currentEvent_ = eventList_.at(currentIndex_);
     return true;
 }
 
@@ -91,7 +94,7 @@ bool DataManager::LoadEvent() {
     }
 
     if (std::find(eventList_.begin(),eventList_.end(), currentEvent_) == eventList_.end()) {
-        std::cerr << "[DataManager] Event out of range: " << currentEvent_ << std::endl;
+        std::cerr << "[DataManager] Event out of range: " << currentEvent_ << "(index " << currentIndex_ << ")" << std::endl;
         return false;
     }
     
@@ -116,7 +119,7 @@ bool DataManager::LoadEvent() {
     TTreeReaderArray<double> trackPointY_(trajReader_,"trackPointY");
     TTreeReaderArray<double> trackPointZ_(trajReader_,"trackPointZ");
 
-    std::cout << "[DataManager] Selecting tracks longer than " << lengthCut_ << " cm and above " << kinECut_ << " initial kinetic energy" << std::endl;
+    std::cout << "[DataManager] Selecting tracks longer than " << lengthCut_ << " cm and above " << kinECut_ << " MeV initial kinetic energy" << std::endl;
 
     while( trajReader_.Next()){
 
@@ -220,7 +223,9 @@ void DataManager::SetTrackStylebyPDG(TEveLine* track, int pdg){
 std::string DataManager::GetSummary() const {
     std::stringstream ss;
     ss << "Event #" << currentEvent_;
-    ss << " of " << eventList_.size() << " loaded";
+    ss << " (" << currentIndex_ << " of " << eventList_.size()-1 << ") loaded";
     ss << "\n\nTrack count: " << (trackList_ ? trackList_->NumChildren() : 0);
+    ss << "\nKinetic energy threshold: " << kinECut_ << " MeV";
+    ss << "\nLength threshold: " << lengthCut_ << " cm";
     return ss.str();
 }
