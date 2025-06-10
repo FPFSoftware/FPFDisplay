@@ -18,6 +18,8 @@
 
 DataManager::DataManager()
     : currentEvent_(0),
+      currentIndex_(0),
+      eventList_{currentEvent_},
       rootFile_(nullptr),
       trackList_(nullptr) {}
 
@@ -48,6 +50,7 @@ bool DataManager::LoadFile(const std::string& filename) {
 
     // prepare event list
     TTreeReaderValue<int> evtID_(trajReader_,"evtID");
+    eventList_.clear();
     while (trajReader_.Next()) {
         if (std::find(eventList_.begin(),eventList_.end(), *evtID_) == eventList_.end())
             eventList_.push_back(*evtID_);
@@ -223,7 +226,7 @@ void DataManager::SetTrackStylebyPDG(TEveLine* track, int pdg){
 std::string DataManager::GetSummary() const {
     std::stringstream ss;
     ss << "Event #" << currentEvent_;
-    ss << " (" << currentIndex_ << " of " << eventList_.size()-1 << ") loaded";
+    ss << " (" << currentIndex_+1 << " of " << eventList_.size() << ") loaded";
     ss << "\n\nTrack count: " << (trackList_ ? trackList_->NumChildren() : 0);
     ss << "\nKinetic energy threshold: " << kinECut_ << " MeV";
     ss << "\nLength threshold: " << lengthCut_ << " cm";
