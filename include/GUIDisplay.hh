@@ -45,6 +45,8 @@ private:
     TGLabel* summaryView_;
     TGTextEntry* filenameEntry_;
     
+    int imageScale_ = 0; // for saving
+
     /// Build control tab
     void MakeControlTab();
 

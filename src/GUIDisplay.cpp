@@ -112,13 +112,14 @@ void GUIDisplay::OnSave()
   std::size_t dot = filename.find_last_of('.');
   std::string base = (dot != std::string::npos) ? filename.substr(0, dot) : filename;
   std::string ext = (dot != std::string::npos) ? filename.substr(dot) : ".png";
-    
-  std::cout << "[GUIDisplay] Saving main display to " << base+ext << std::endl;
   std::string out = base+ext;
-  gEve->GetDefaultGLViewer()->SavePicture(out.c_str());
+
+  std::cout << "[GUIDisplay] Saving main display to " << out << std::endl;
+  if(imageScale_>0) gEve->GetDefaultGLViewer()->SavePictureScale(out.c_str(),imageScale_);
+  else gEve->GetDefaultGLViewer()->SavePicture(out.c_str());
 
   std::cout << "[GUIDisplay] Saving MultiView displays" << std::endl;
-  mv_->SaveDisplays(base, ext);
+  mv_->SaveDisplays(base, ext, imageScale_);
 
 }
 
