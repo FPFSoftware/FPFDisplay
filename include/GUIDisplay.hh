@@ -9,6 +9,7 @@
 #include "MultiView.hh"
 
 #include "TGLabel.h"
+#include "TGTextEntry.h"
 
 /**
  * Sets up the TEve GUI: multi‐view (3D, ZX, ZY) + a Controls tab
@@ -32,6 +33,9 @@ public:
     void OnNextEvent();
     void OnPrevEvent();
 
+    /// Called when "Save" button fires
+    void OnSave();
+
     ClassDef(GUIDisplay, 0)  // ROOT dictionary for signal/slot
 
 private:
@@ -39,7 +43,8 @@ private:
     DataManager dataMgr_;
     MultiView *mv_;
     TGLabel* summaryView_;
-
+    TGTextEntry* filenameEntry_;
+    
     /// Build control tab
     void MakeControlTab();
 

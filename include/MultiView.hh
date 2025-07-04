@@ -41,6 +41,9 @@ struct MultiView {
    void DestroyEventZX();
    void DestroyEventZY();
 
+   /// Save current displays as images 
+   void SaveDisplays(std::string base, std::string ext);
+
 };
 
 #endif // MULTIVIEW_HH

@@ -16,14 +16,15 @@
 #include "TGButton.h"
 #include "TGLabel.h"
 #include "TGTextView.h"
+#include "TGLViewer.h"
 
 ClassImp(GUIDisplay)
 
 GUIDisplay::GUIDisplay() {}
 GUIDisplay::~GUIDisplay() {}
 
-void GUIDisplay::Initialize(const std::string& title) {
-
+void GUIDisplay::Initialize(const std::string& title)
+{
   // 1) Start up EVE
   std::cout << "[GUIDisplay] Initializing..." << std::endl;
 
@@ -55,17 +56,19 @@ void GUIDisplay::Initialize(const std::string& title) {
 
 }
 
-void GUIDisplay::LoadGeometry(const std::string& gdmlFile, const bool useDefault) {
+void GUIDisplay::LoadGeometry(const std::string& gdmlFile, const bool useDefault)
+{
   geomMgr_.UseDefault(useDefault);
   geomMgr_.LoadGDML(gdmlFile);
 }
 
-void GUIDisplay::LoadFile(const std::string& rootFile) {
+void GUIDisplay::LoadFile(const std::string& rootFile)
+{
   dataMgr_.LoadFile(rootFile);
 }
 
-void GUIDisplay::LoadEvent(){
-
+void GUIDisplay::LoadEvent()
+{
   gEve->GetViewers()->DeleteAnnotations();
 
   // load current selected event 
@@ -84,22 +87,43 @@ void GUIDisplay::LoadEvent(){
 
 }
 
-void GUIDisplay::OnNextEvent() {
+void GUIDisplay::OnNextEvent()
+{
   if (dataMgr_.NextEvent()){
     LoadEvent();
     UpdateSummary();
   } 
 }
 
-void GUIDisplay::OnPrevEvent() {
+void GUIDisplay::OnPrevEvent()
+{
   if (dataMgr_.PrevEvent()){
     LoadEvent();
     UpdateSummary();
   }
 }
 
-void GUIDisplay::MakeControlTab(){
+void GUIDisplay::OnSave()
+{
+  std::string filename = filenameEntry_->GetText();
+  if (filename.empty()) filename = "evd.png";
 
+  // split in name + extension
+  std::size_t dot = filename.find_last_of('.');
+  std::string base = (dot != std::string::npos) ? filename.substr(0, dot) : filename;
+  std::string ext = (dot != std::string::npos) ? filename.substr(dot) : ".png";
+    
+  std::cout << "[GUIDisplay] Saving main display to " << base+ext << std::endl;
+  std::string out = base+ext;
+  gEve->GetDefaultGLViewer()->SavePicture(out.c_str());
+
+  std::cout << "[GUIDisplay] Saving MultiView displays" << std::endl;
+  mv_->SaveDisplays(base, ext);
+
+}
+
+void GUIDisplay::MakeControlTab()
+{
   std::cout << "[GUIDisplay] Building 'Event Control' tab..." << std::endl;
 
   TEveBrowser* browser = gEve->GetBrowser();
@@ -120,7 +144,6 @@ void GUIDisplay::MakeControlTab(){
   hf->AddFrame(btn, new TGLayoutHints(kLHintsCenterY, 5, 10, 2, 2));
   btn->Connect("Clicked()", "GUIDisplay", this, "OnPrevEvent()");
   
-  
   // go forward button
   btn = new TGPictureButton(hf, gClient->GetPicture(icondir + "GoForward.gif"));
   hf->AddFrame(btn, new TGLayoutHints(kLHintsCenterY, 10, 5, 2, 2));
@@ -134,6 +157,21 @@ void GUIDisplay::MakeControlTab(){
   summaryView_ = new TGLabel(frm, "");
   frm->AddFrame(summaryView_, new TGLayoutHints(kLHintsExpandX | kLHintsTop, 5, 5, 10, 5));
 
+  // filename input field
+  TGHorizontalFrame* outFrame = new TGHorizontalFrame(frm);
+  TGLabel* fileLabel = new TGLabel(outFrame, "Output:");
+  outFrame->AddFrame(fileLabel, new TGLayoutHints(kLHintsCenterY, 5, 2, 2, 2));
+  filenameEntry_ = new TGTextEntry(outFrame, "evd.png");
+  filenameEntry_->SetWidth(100);
+  outFrame->AddFrame(filenameEntry_, new TGLayoutHints(kLHintsCenterY, 2, 5, 2, 2));
+  
+  // save button
+  TGTextButton* saveBtn = new TGTextButton(outFrame, "Save");
+  outFrame->AddFrame(saveBtn, new TGLayoutHints(kLHintsCenterY, 2, 5, 2, 2));
+  saveBtn->Connect("Clicked()", "GUIDisplay", this, "OnSave()");
+
+  frm->AddFrame(outFrame, new TGLayoutHints(kLHintsCenterX | kLHintsTop, 5, 5, 5, 5));
+
   frm->MapSubwindows();
   frm->Resize();
   frm->MapWindow();
@@ -142,7 +180,8 @@ void GUIDisplay::MakeControlTab(){
   browser->SetTabTitle("Event Control", 0);
 }
 
-void GUIDisplay::UpdateSummary() {
+void GUIDisplay::UpdateSummary()
+{
   summaryView_->SetText(dataMgr_.GetSummary().c_str());
   // resize to fit new text
   summaryView_->Resize(summaryView_->GetDefaultWidth(),summaryView_->GetDefaultHeight());
