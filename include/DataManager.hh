@@ -20,8 +20,7 @@ public:
     bool NextEvent();
     /// Move to the previous event.
     bool PrevEvent();
-
-    /// Load selected event
+    /// Load selected event.
     bool LoadEvent();
 
     /// Text summary of the current event.

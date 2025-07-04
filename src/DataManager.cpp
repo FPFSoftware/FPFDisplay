@@ -23,11 +23,13 @@ DataManager::DataManager()
       rootFile_(nullptr),
       trackList_(nullptr) {}
 
-DataManager::~DataManager() {
+DataManager::~DataManager()
+{
     if(rootFile_) rootFile_->Close();
 }
 
-bool DataManager::LoadFile(const std::string& filename) {
+bool DataManager::LoadFile(const std::string& filename)
+{
     std::cout << "[DataManager] Loading ROOT file: " << filename << std::endl;
 
     if(rootFile_) {
@@ -65,7 +67,8 @@ bool DataManager::LoadFile(const std::string& filename) {
     return true;
 }
 
-bool DataManager::NextEvent() {
+bool DataManager::NextEvent()
+{
     if(!rootFile_) return false;
     if (currentIndex_+1 >= eventList_.size()) {
         std::cout << "[DataManager] Already at last event." << std::endl;
@@ -77,7 +80,8 @@ bool DataManager::NextEvent() {
     return true;
 }
 
-bool DataManager::PrevEvent() {
+bool DataManager::PrevEvent()
+{
     if(!rootFile_) return false;
     if (currentIndex_-1 < 0) {
         std::cout << "[DataManager] Already at first event." << std::endl;
@@ -89,8 +93,8 @@ bool DataManager::PrevEvent() {
     return true;
 }
 
-bool DataManager::LoadEvent() {
-
+bool DataManager::LoadEvent()
+{
     if(!rootFile_){
         std::cout << "[DataManager] No data file selected, skipping event loading" << std::endl;
         return false;
@@ -168,7 +172,8 @@ bool DataManager::LoadEvent() {
     return true;
 }
 
-void DataManager::SetTrackStylebyPDG(TEveLine* track, int pdg){
+void DataManager::SetTrackStylebyPDG(TEveLine* track, int pdg)
+{
     switch(pdg){
         // gamma
         case 22:
@@ -223,7 +228,8 @@ void DataManager::SetTrackStylebyPDG(TEveLine* track, int pdg){
     }
 }
 
-std::string DataManager::GetSummary() const {
+std::string DataManager::GetSummary() const 
+{
     std::stringstream ss;
     ss << "Event #" << currentEvent_;
     ss << " (" << currentIndex_+1 << " of " << eventList_.size() << ") loaded";
