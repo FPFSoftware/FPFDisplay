@@ -39,7 +39,15 @@ You can navigate the display in the following ways:
 - You can use the mouse to rotate or zoom the geometry. 
 - You can use the arrow keys to pan the geometry, recentering the camera.
 - If you click on a track, it will get highligthed across the views.
-- You can move across events using the "Backward" and "Forward" buttons in the "Event control" tab.
+- You can move across events using the "Prev." and "Next" buttons in the "Event control" tab.
+
+### Saving images
+
+You can save the displays by clicking the "Save" button in the "Event control" tab.
+This will capture the current status of all viewers, including zoom and camera orientation.
+The output filename can be customized by using the input field next to the "Save" button.
+The default name is `evd.png`. 
+Note that the `pdf` extension can be used, but it does not fully support transparency and texturing.
 
 ### Using VNC on lxplus
 
