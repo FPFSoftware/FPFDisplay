@@ -73,11 +73,10 @@ void GeometryManager::LoadGDML(const std::string& gdmlFile)
     // are not projectable in the viewers...
     gentleGeoFile_ = gdmlFile.substr(0, gdmlFile.size() - 5) + "_gentle.root";
     ExtractGentleGeometry();
-
 }
 
-void GeometryManager::ExtractGentleGeometry() {
-
+void GeometryManager::ExtractGentleGeometry()
+{
     std::cout << "[GeometryManager] Extracting gentle geometry to " << gentleGeoFile_ << "..." << std::endl;
     TEveManager *locEve = TEveManager::Create();
 
@@ -224,8 +223,8 @@ void GeometryManager::ExtractGentleGeometry() {
     locEve->GetCurrentEvent()->DestroyElements();
 }
 
-TEveGeoShape* GeometryManager::ImportGentleGeometry(){
-
+TEveGeoShape* GeometryManager::ImportGentleGeometry()
+{
     std::cout << "[GeometryManager] Re-importing gentle geometry from " << gentleGeoFile_ << "..." << std::endl;
 
     auto geom = TFile::Open(gentleGeoFile_.c_str());
@@ -239,12 +238,14 @@ TEveGeoShape* GeometryManager::ImportGentleGeometry(){
     return gentle;
 }
 
-TEveGeoTopNode* GeometryManager::GetTopNode() const {
+TEveGeoTopNode* GeometryManager::GetTopNode() const
+{
     auto topNode = new TEveGeoTopNode(gGeoManager, hallNode_);
     topNode->SetVisLevel(6);
     return topNode;
 }
 
-const std::vector<TGeoNode*>& GeometryManager::GetDetectorNodes() const {
+const std::vector<TGeoNode*>& GeometryManager::GetDetectorNodes() const
+{
     return detectorNodes_;
 }

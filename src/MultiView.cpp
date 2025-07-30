@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "MultiView.hh"
 
@@ -121,4 +122,24 @@ void MultiView::DestroyEventZX()
 void MultiView::DestroyEventZY()
 {
    fZYEventScene->DestroyElements();
+}
+
+// ____________________________________________________________________________
+void MultiView::SaveDisplays(std::string base, std::string ext, int scale)
+{
+   std::string name3D = base + "_mv3D" + ext;
+   std::string nameZX = base + "_mvZX" + ext;
+   std::string nameZY = base + "_mvZY" + ext;
+
+   std::cout << "[MultiView] Saving 3D to " << name3D << std::endl;
+   if(scale>0) f3DView->GetGLViewer()->SavePictureScale(name3D.c_str(), scale);
+   else f3DView->GetGLViewer()->SavePicture(name3D.c_str());
+   
+   std::cout << "[MultiView] Saving ZX to " << nameZX << std::endl; 
+   if(scale>0) fZXView->GetGLViewer()->SavePictureScale(nameZX.c_str(), scale);
+   else fZXView->GetGLViewer()->SavePicture(nameZX.c_str());
+   
+   std::cout << "[MultiView] Saving ZY to " << nameZY << std::endl; 
+   if(scale>0) fZYView->GetGLViewer()->SavePictureScale(nameZY.c_str(), scale);
+   else fZYView->GetGLViewer()->SavePicture(nameZY.c_str());
 }
