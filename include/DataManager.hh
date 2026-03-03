@@ -20,6 +20,8 @@ public:
     bool NextEvent();
     /// Move to the previous event.
     bool PrevEvent();
+    /// Jump directly to a specific event number.
+    bool GoToEvent(int evtNum);
     /// Load selected event.
     bool LoadEvent();
 

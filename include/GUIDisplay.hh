@@ -33,6 +33,9 @@ public:
     void OnNextEvent();
     void OnPrevEvent();
 
+    /// Called when "Go To" button fires
+    void OnGoToEvent();
+
     /// Called when "Save" button fires
     void OnSave();
 
@@ -43,6 +46,7 @@ private:
     DataManager dataMgr_;
     MultiView *mv_;
     TGLabel* summaryView_;
+    TGTextEntry* goToEntry_;
     TGTextEntry* filenameEntry_;
     
     int imageScale_ = 0; // for saving
