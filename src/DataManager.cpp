@@ -125,19 +125,19 @@ bool DataManager::LoadEvent()
         trackList_->DestroyElements();
     } else {
         // Create track container
-        trackList_ = new TEveElementList("Tracks");
+        trackList_ = new TEveElementList("particles");
         gEve->AddElement(trackList_);
     }
 
-    TTreeReaderValue<int> evtID_(trajReader_,"evtID");
-    TTreeReaderValue<int> trackTID_(trajReader_,"trackTID");
-    TTreeReaderValue<int> trackPID_(trajReader_,"trackPID");
-    TTreeReaderValue<int> trackPDG_(trajReader_,"trackPDG");
-    TTreeReaderValue<double> trackKinE_(trajReader_,"trackKinE");
-    TTreeReaderValue<int> trackNPoints_(trajReader_,"trackNPoints");
-    TTreeReaderArray<double> trackPointX_(trajReader_,"trackPointX");
-    TTreeReaderArray<double> trackPointY_(trajReader_,"trackPointY");
-    TTreeReaderArray<double> trackPointZ_(trajReader_,"trackPointZ");
+    TTreeReaderValue<int> evtID_(trajReader_,"event_id");
+    TTreeReaderValue<int> trackTID_(trajReader_,"track_id");
+    TTreeReaderValue<int> trackPID_(trajReader_,"parent_id");
+    TTreeReaderValue<int> trackPDG_(trajReader_,"particle_pdg");
+    TTreeReaderValue<double> trackKinE_(trajReader_,"ke");
+    TTreeReaderValue<int> trackNPoints_(trajReader_,"traj_Npoints");
+    TTreeReaderArray<double> trackPointX_(trajReader_,"traj_pointX");
+    TTreeReaderArray<double> trackPointY_(trajReader_,"traj_pointY");
+    TTreeReaderArray<double> trackPointZ_(trajReader_,"traj_pointZ");
 
     std::cout << "[DataManager] Selecting tracks longer than " << lengthCut_ << " cm and above " << kinECut_ << " MeV initial kinetic energy" << std::endl;
 
