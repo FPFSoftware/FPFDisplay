@@ -43,7 +43,7 @@ bool DataManager::LoadFile(const std::string& filename)
         return false;
     }
 
-    std::string treeName = "trk";
+    std::string treeName = "particles";
     trajReader_.SetTree(treeName.c_str(), rootFile_); 
     if (!trajReader_.GetTree() ) {
         std::cerr << "[DataManager] Could not find '" << treeName << "' tree "<< std::endl;
@@ -51,7 +51,7 @@ bool DataManager::LoadFile(const std::string& filename)
     }
 
     // prepare event list
-    TTreeReaderValue<int> evtID_(trajReader_,"evtID");
+    TTreeReaderValue<int> evtID_(trajReader_,"event_id");
     eventList_.clear();
     while (trajReader_.Next()) {
         if (std::find(eventList_.begin(),eventList_.end(), *evtID_) == eventList_.end())
@@ -125,7 +125,7 @@ bool DataManager::LoadEvent()
         trackList_->DestroyElements();
     } else {
         // Create track container
-        trackList_ = new TEveElementList("particles");
+        trackList_ = new TEveElementList("Tracks");
         gEve->AddElement(trackList_);
     }
 
@@ -133,11 +133,11 @@ bool DataManager::LoadEvent()
     TTreeReaderValue<int> trackTID_(trajReader_,"track_id");
     TTreeReaderValue<int> trackPID_(trajReader_,"parent_id");
     TTreeReaderValue<int> trackPDG_(trajReader_,"particle_pdg");
-    TTreeReaderValue<double> trackKinE_(trajReader_,"ke");
+    TTreeReaderValue<float> trackKinE_(trajReader_,"ke");
     TTreeReaderValue<int> trackNPoints_(trajReader_,"traj_Npoints");
-    TTreeReaderArray<double> trackPointX_(trajReader_,"traj_pointX");
-    TTreeReaderArray<double> trackPointY_(trajReader_,"traj_pointY");
-    TTreeReaderArray<double> trackPointZ_(trajReader_,"traj_pointZ");
+    TTreeReaderArray<float> trackPointX_(trajReader_,"traj_pointX");
+    TTreeReaderArray<float> trackPointY_(trajReader_,"traj_pointY");
+    TTreeReaderArray<float> trackPointZ_(trajReader_,"traj_pointZ");
 
     std::cout << "[DataManager] Selecting tracks longer than " << lengthCut_ << " cm and above " << kinECut_ << " MeV initial kinetic energy" << std::endl;
 
