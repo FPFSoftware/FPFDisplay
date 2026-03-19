@@ -103,6 +103,17 @@ void GUIDisplay::OnPrevEvent()
   }
 }
 
+void GUIDisplay::OnGoToEvent()
+{
+  TString txt = goToEntry_->GetText();
+  if (txt.IsNull()) return;
+  int evtNum = txt.Atoi();
+  if (dataMgr_.GoToEvent(evtNum)) {
+    LoadEvent();
+    UpdateSummary();
+  }
+}
+
 void GUIDisplay::OnSave()
 {
   std::string filename = filenameEntry_->GetText();
@@ -153,6 +164,18 @@ void GUIDisplay::MakeControlTab()
   hf->AddFrame(lblNext, new TGLayoutHints(kLHintsCenterY, 0,5,2,2));
 
   frm->AddFrame(hf, new TGLayoutHints(kLHintsTop | kLHintsCenterX));
+
+  // go-to event row
+  TGHorizontalFrame* gotoFrame = new TGHorizontalFrame(frm);
+  TGLabel* gotoLabel = new TGLabel(gotoFrame, "Go to event:");
+  gotoFrame->AddFrame(gotoLabel, new TGLayoutHints(kLHintsCenterY, 5, 2, 2, 2));
+  goToEntry_ = new TGTextEntry(gotoFrame, "");
+  goToEntry_->SetWidth(60);
+  gotoFrame->AddFrame(goToEntry_, new TGLayoutHints(kLHintsCenterY, 2, 2, 2, 2));
+  TGTextButton* gotoBtn = new TGTextButton(gotoFrame, "Go");
+  gotoFrame->AddFrame(gotoBtn, new TGLayoutHints(kLHintsCenterY, 2, 5, 2, 2));
+  gotoBtn->Connect("Clicked()", "GUIDisplay", this, "OnGoToEvent()");
+  frm->AddFrame(gotoFrame, new TGLayoutHints(kLHintsTop | kLHintsCenterX));
 
   // event summary
   summaryView_ = new TGLabel(frm, "");

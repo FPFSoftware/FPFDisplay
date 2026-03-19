@@ -87,9 +87,22 @@ bool DataManager::PrevEvent()
         std::cout << "[DataManager] Already at first event." << std::endl;
         return false;
     }
-    
+
     --currentIndex_;
     currentEvent_ = eventList_.at(currentIndex_);
+    return true;
+}
+
+bool DataManager::GoToEvent(int evtNum)
+{
+    if(!rootFile_) return false;
+    auto it = std::find(eventList_.begin(), eventList_.end(), evtNum);
+    if (it == eventList_.end()) {
+        std::cerr << "[DataManager] Event " << evtNum << " not found." << std::endl;
+        return false;
+    }
+    currentIndex_ = std::distance(eventList_.begin(), it);
+    currentEvent_ = evtNum;
     return true;
 }
 
